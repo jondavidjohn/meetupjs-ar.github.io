@@ -27,14 +27,19 @@ module.exports = withPlugins(
         }
       }
     ],
-    [
-      new PacktrackerPlugin({
-        project_token: '6520c5cc-d69d-4c49-9b1b-e66fbdcabc4f',
-        upload: process.env.CI,
-        fail_build: process.env.CI,
-        branch: process.env.TRAVIS_BRANCH || process.env.TRAVIS_PULL_REQUEST_BRANCH
+    [(nextConfig = {}) => {
+      return Object.assign({}, nextConfig, {
+        webpack(config) {
+          config.plugins.push(
+            new PacktrackerPlugin({
+              upload: process.env.CI,
+              fail_build: process.env.CI,
+              branch: process.env.TRAVIS_BRANCH || process.env.TRAVIS_PULL_REQUEST_BRANCH
+            })
+          )
+        }
       })
-    ]
+    }]
   ],
   {
     distDir: 'build',
